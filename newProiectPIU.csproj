@@ -48,9 +48,11 @@
   <ItemGroup>
     <Compile Include="AdministrareDate\AdministrareCarti_FisierText.cs" />
     <Compile Include="AdministrareDate\AdministrarePersoane_FisierText.cs" />
+    <Compile Include="AdminMenu.cs" />
     <Compile Include="BibliotecaF\Biblioteca.cs" />
     <Compile Include="BibliotecaF\Carte.cs" />
     <Compile Include="BibliotecaF\ICarte.cs" />
+    <Compile Include="FirstMenu.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,5 +93,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="adminText.txt" />
+    <Content Include="Images\adminChanged.png" />
+    <Content Include="Images\adminDefault.png" />
+    <Content Include="Images\auf.png" />
+    <Content Include="Images\bookDefault.png" />
+    <Content Include="Images\bookFocused.png" />
+    <Content Include="Images\inapoiChanged.png" />
+    <Content Include="Images\inapoiDefault.png" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\menuAdministratorLogo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
