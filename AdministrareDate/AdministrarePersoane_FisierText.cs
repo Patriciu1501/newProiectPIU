@@ -16,28 +16,14 @@ namespace newProiectPIU.AdministrareDate {
             streamFisierText.Close();
         }
 
-        public static void AdaugarePersoana() {
-            string numeComplet = string.Empty;
-            string studentProfesor = string.Empty;
-            string dataNasterii = string.Empty;
-            int numarCartiImprumutate = 0;
-
-            Console.Write("Nume complet: ");
-            numeComplet = Console.ReadLine();
-            Console.Write("Student sau profesor: ");
-            studentProfesor = Console.ReadLine();
-            Console.Write("Data nasterii(zz/ll/aaaa): ");
-            dataNasterii = Console.ReadLine();
-            Console.Write("Numar carti imprumutate: ");
-            numarCartiImprumutate = Convert.ToInt32(Console.ReadLine());
+        public static void AdaugarePersoana(string nume, string prenume, string dataNasterii ) {
+          
+   
 
             using (StreamWriter fisier = new StreamWriter(numeFisier, true)) {
 
-                fisier.WriteLine(numeComplet + ";" + dataNasterii + ";" + studentProfesor + ";" + numarCartiImprumutate);
+                fisier.WriteLine(nume + ";" + prenume + ";" + dataNasterii + ";");
             }
-
-            Console.Clear();
-            Console.WriteLine("Persoana a fost adaugata!");
 
         }
 
