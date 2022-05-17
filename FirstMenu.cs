@@ -150,7 +150,7 @@ namespace newProiectPIU {
 
         private void Logo_Click(object sender, EventArgs e) {
 
-            System.Diagnostics.Process.Start("http://www.github.com/Patriciu1501");
+            System.Diagnostics.Process.Start("https://github.com/Patriciu1501/newProiectPIU");
         }
 
         public static void button_MouseOn(object sender, EventArgs e) {
