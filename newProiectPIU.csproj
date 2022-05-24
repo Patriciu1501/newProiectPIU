@@ -95,7 +95,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="adminText.txt" />
-    <Content Include="Images\adminChanged.png" />
+    <Content Include="Images\adminFocused.png" />
     <Content Include="Images\adminDefault.png" />
     <Content Include="Images\auf.png" />
     <Content Include="Images\bookDefault.png" />
