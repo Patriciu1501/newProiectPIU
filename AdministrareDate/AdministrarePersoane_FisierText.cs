@@ -5,6 +5,8 @@ namespace newProiectPIU.AdministrareDate {
     using System.IO;
     using System.Configuration;
     using System.Collections.Generic;
+    using System.Windows.Forms;
+
     public static class AdministrarePersoane_FisierText {
 
         private const string numeFisier = "Persoane.txt";
@@ -16,42 +18,27 @@ namespace newProiectPIU.AdministrareDate {
             streamFisierText.Close();
         }
 
-        public static void AdaugarePersoana(string nume, string prenume, string dataNasterii ) {
+        public static void AdaugarePersoana(string nume, string prenume, string statut, string dataNasterii ) {
           
    
 
             using (StreamWriter fisier = new StreamWriter(numeFisier, true)) {
 
-                fisier.WriteLine(nume + ";" + prenume + ";" + dataNasterii + ";");
+                fisier.WriteLine(nume + ";" + prenume + ";" + statut + ";" + dataNasterii);
             }
 
         }
 
-        public static List<string> GetFullDate() {
-            var date = new List<string>();
+        public static void GetFullDate(DataGridView grid) {
 
-            bool fisierGol = false;
+            grid.Rows.Clear();
 
             using (StreamReader fisier = new StreamReader(numeFisier)) {
-                if (fisier.EndOfStream) fisierGol = true;
-
+  
                 while (!fisier.EndOfStream) {
-                    date.Add(fisier.ReadLine());
+                    grid.Rows.Add(fisier.ReadLine().Split(';'));
                 }
             }
-
-
-            Console.Clear();
-
-            if (!fisierGol) Console.WriteLine("Intregul fisier a fost citit!");
-
-            else {
-
-                Console.WriteLine("Fisierul este gol!");
-                date.Add("Fisierul este gol!");
-            }
-
-            return date;
         }
 
 

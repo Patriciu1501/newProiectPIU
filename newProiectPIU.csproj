@@ -95,12 +95,14 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="adminText.txt" />
+    <Content Include="Images\addDefault.png" />
+    <Content Include="Images\addFocused.png" />
     <Content Include="Images\adminFocused.png" />
     <Content Include="Images\adminDefault.png" />
     <Content Include="Images\auf.png" />
     <Content Include="Images\bookDefault.png" />
     <Content Include="Images\bookFocused.png" />
-    <Content Include="Images\inapoiChanged.png" />
+    <Content Include="Images\inapoiFocused.png" />
     <Content Include="Images\inapoiDefault.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\menuAdministratorLogo.png" />

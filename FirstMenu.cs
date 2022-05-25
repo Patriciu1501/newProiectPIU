@@ -179,19 +179,10 @@ namespace newProiectPIU {
 
             Panel parent = null;
 
-            if (sender is Label) {
+            (sender as Control).Cursor = Cursors.Hand;
+            parent = (sender as Control).Parent as Panel;
 
-                parent = (sender as Label).Parent as Panel;
-                (sender as Label).Cursor = Cursors.Hand;
-            }
-
-            else if (sender is Button) {
-
-                parent = (sender as Button).Parent as Panel;
-                (sender as Button).Cursor = Cursors.Hand;
-            }
-
-            foreach(var i in parent.Controls) {
+            foreach (var i in parent.Controls) {
 
                 if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\bookFocused.png");
                 else if (i is Button) (i as Button).ForeColor = changedColor;
@@ -204,17 +195,8 @@ namespace newProiectPIU {
 
             Panel parent = null;
 
-            if (sender is Label) {
-
-                parent = (sender as Label).Parent as Panel;
-                (sender as Label).Cursor = Cursors.Default;
-            }
-
-            else if (sender is Button) {
-
-                parent = (sender as Button).Parent as Panel;
-                (sender as Button).Cursor = Cursors.Default;
-            }
+            (sender as Control).Cursor = Cursors.Default;
+            parent = (sender as Control).Parent as Panel;
 
             foreach (var i in parent.Controls) {
 
@@ -229,17 +211,8 @@ namespace newProiectPIU {
 
             Panel parent = null;
 
-            if (sender is Label) {
-
-                parent = (sender as Label).Parent as Panel;
-                (sender as Label).Cursor = Cursors.Hand;
-            }
-
-            else if (sender is Button) {
-
-                parent = (sender as Button).Parent as Panel;
-                (sender as Button).Cursor = Cursors.Hand;
-            }
+            (sender as Control).Cursor = Cursors.Hand;
+            parent = (sender as Control).Parent as Panel;
 
             foreach (var i in parent.Controls) {
 
@@ -254,17 +227,8 @@ namespace newProiectPIU {
 
             Panel parent = null;
 
-            if (sender is Label) {
-
-                parent = (sender as Label).Parent as Panel;
-                (sender as Label).Cursor = Cursors.Default;
-            }
-
-            else if (sender is Button) {
-
-                parent = (sender as Button).Parent as Panel;
-                (sender as Button).Cursor = Cursors.Default;
-            }
+            (sender as Control).Cursor = Cursors.Default;
+            parent = (sender as Control).Parent as Panel;
 
             foreach (var i in parent.Controls) {
 

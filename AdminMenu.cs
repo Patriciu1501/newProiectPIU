@@ -8,21 +8,24 @@ using System.Windows.Forms;
 using newProiectPIU.AdministrareDate;
 
 namespace newProiectPIU {
-    class AdminMenu {
+    partial class AdminMenu {
 
         public enum AdministrareVarianta { Carti, Persoane };
         AdministrareVarianta administrareVarianta;
+
         public static Panel menu;
         public Label logo;
         public RadioButton radioCarti;
         public RadioButton radioPersoane;
         public Label administrareText;
         public Label optiuniText;
+
+        public Panel optiuneInapoi;
         public Button inapoi;
         public Label imageInapoi;
 
         // persoane-admin
-        CheckBox adaugaPersoana;
+        CheckBox adaugaPersoanaCarte;
         Label adaugaPersoanaOptiuneText;
         Label numePersoanaText;
         Label prenumePersoanaText;
@@ -34,13 +37,17 @@ namespace newProiectPIU {
         ComboBox dataLuna;
         ComboBox dataAnul;
         ComboBox studentProfesorBibliotecar;
+        Panel optiuneAdauga;
+        Label imageAdd;
         Button adaugaPersoanaButton;
 
 
-        CheckBox getFullDatePersoana;
-        ListBox zonaDatePersoane;
-        CheckBox getDateDupaCriteriuPersoana;
-        ListBox zoneDatePersoana;
+        CheckBox getFullDatePersoanaCarte;
+        DataGridView zonaDatePersoane;
+
+
+        CheckBox getDateDupaCriteriuPersoanaCarte;
+
         
 
 
@@ -50,7 +57,7 @@ namespace newProiectPIU {
 
 
             menu = new Panel() { Visible = false };
-            menu.Size = new Size(850, 950);
+            menu.Size = new Size(950, 1050);
 
             logo = new Label() { Visible = true, Size = new Size(420, 290) };
             logo.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\menuAdministratorLogo.png");
@@ -66,8 +73,11 @@ namespace newProiectPIU {
             radioCarti.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
             radioPersoane.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
             radioPersoane.Checked = true;
+            radioPersoane.CheckedChanged += RadioChecked;
 
-            inapoi = new Button();
+            optiuneInapoi = new Panel() { Visible = true, Size = new Size(350, 54) };
+            optiuneInapoi.Location = new Point(23, 0);
+
 
             inapoi = new Button();
             inapoi.Name = "Admin";
@@ -82,17 +92,21 @@ namespace newProiectPIU {
             inapoi.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             inapoi.Size = new Size(61, 30);
             inapoi.Location = new Point(23, 0);
-            inapoi.MouseEnter += Inapoi_MouseEnter;
-            inapoi.MouseLeave += Inapoi_MouseLeave;
-            inapoi.MouseClick += Inapoi_MouseClick;
+            inapoi.MouseEnter += InapoiMouseEnter;
+            inapoi.MouseLeave += InapoiMouseLeave;
+            inapoi.MouseClick += InapoiMouseClick;
 
             imageInapoi = new Label() { Visible = true };
             imageInapoi.Size = new Size(26, 26);
             imageInapoi.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiDefault.png");
             imageInapoi.Location = new Point(0, 0);
-            imageInapoi.MouseEnter += ImageInapoi_MouseEnter;
-            imageInapoi.MouseLeave += ImageInapoi_MouseLeave;
-            imageInapoi.Click += ImageInapoi_Click;
+            imageInapoi.MouseEnter += InapoiMouseEnter;
+            imageInapoi.MouseLeave += InapoiMouseLeave;
+            imageInapoi.Click += InapoiMouseClick;
+
+            optiuneInapoi.Controls.Add(inapoi);
+            optiuneInapoi.Controls.Add(imageInapoi);
+
 
             optiuniText = new Label() { Visible = true, Text = "Optiuni:" };
             optiuniText.Font = new Font("Nirmala UI", 12, FontStyle.Bold);
@@ -101,14 +115,14 @@ namespace newProiectPIU {
 
            
 
-            adaugaPersoana = new CheckBox() { Visible = true, Text = "Adauga persoana" };
-            adaugaPersoana.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
-            adaugaPersoana.Location = new Point(optiuniText.Location.X + optiuniText.Width, optiuniText.Location.Y);
-            adaugaPersoana.Size = new Size(135, 24);
-            adaugaPersoana.CheckedChanged += AdaugaPersoana_CheckedChanged;
+            adaugaPersoanaCarte = new CheckBox() { Visible = true, Text = "Adauga persoana" };
+            adaugaPersoanaCarte.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
+            adaugaPersoanaCarte.Location = new Point(optiuniText.Location.X + optiuniText.Width, optiuniText.Location.Y);
+            adaugaPersoanaCarte.Size = new Size(135, 24);
+            adaugaPersoanaCarte.CheckedChanged += AdaugaPersoana_CheckedChanged;
 
             adaugaPersoanaOptiuneText = new Label() { Visible = false, Text = "Adauga persoana" };
-            adaugaPersoanaOptiuneText.Font = new Font("Nirmala UI", 13, FontStyle.Bold);
+            adaugaPersoanaOptiuneText.Font = new Font("Nirmala UI", 15, FontStyle.Bold);
             adaugaPersoanaOptiuneText.Size = new Size(180, 30);
             adaugaPersoanaOptiuneText.Location = new Point(15, 400);
             
@@ -133,17 +147,40 @@ namespace newProiectPIU {
 
 
 
-           dataNasteriiPersoanaText = new Label() { Visible = false, Size = new Size(120, 30) };
-           dataNasteriiPersoanaText.Font = new Font("Nirmala UI", 12, FontStyle.Bold);
-           dataNasteriiPersoanaText.Text = "Data nasterii:";
-           dataNasteriiPersoanaText.Location = new Point(15, 520);
+            tipPersoanaText = new Label() { Visible = false, Size = new Size(80, 30) };
+            tipPersoanaText.Font = new Font("Nirmala UI", 12, FontStyle.Bold);
+            tipPersoanaText.Text = "Statut:";
+            tipPersoanaText.Location = new Point(prenumePersoanaText.Location.X, prenumePersoanaText.Location.Y + prenumePersoanaText.Height);
+
+            studentProfesorBibliotecar = new ComboBox() { Visible = false, Size = new Size(80, 40) };
+            studentProfesorBibliotecar.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
+            studentProfesorBibliotecar.Text = "Tipul";
+            studentProfesorBibliotecar.Items.Add("Student");
+            studentProfesorBibliotecar.Items.Add("Profesor");
+            studentProfesorBibliotecar.Items.Add("Bibliotecar");
+            studentProfesorBibliotecar.Location = new Point(prenumePersoanaTextBox.Location.X, tipPersoanaText.Location.Y);
+
+
+            dataNasteriiPersoanaText = new Label() { Visible = false, Size = new Size(120, 30) };
+            dataNasteriiPersoanaText.Font = new Font("Nirmala UI", 12, FontStyle.Bold);
+            dataNasteriiPersoanaText.Text = "Data nasterii:";
+            dataNasteriiPersoanaText.Location = new Point(tipPersoanaText.Location.X, tipPersoanaText.Location.Y + tipPersoanaText.Height);
 
             dataZiua = new ComboBox() { Visible = false, Size = new Size(40, 40) };
             dataZiua.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
             
             for(int i = 1; i <= 31; i++) {
 
-                dataZiua.Items.Add(i.ToString());
+                string ziua = string.Empty;
+
+                if (i < 10) {
+
+                    ziua = "0" + i.ToString();
+                }
+
+                else ziua = i.ToString();
+
+                dataZiua.Items.Add(ziua);
             }
 
             dataZiua.Text = "ZZ";
@@ -185,6 +222,9 @@ namespace newProiectPIU {
 
 
 
+            optiuneAdauga = new Panel() { Visible = true, Size = new Size(350, 54) };
+            optiuneAdauga.Location = new Point(95, 575);;
+
             adaugaPersoanaButton = new Button();
             adaugaPersoanaButton.Name = "Admin";
             adaugaPersoanaButton.Visible = false;
@@ -195,99 +235,208 @@ namespace newProiectPIU {
             adaugaPersoanaButton.FlatAppearance.BorderSize = 0;
             adaugaPersoanaButton.FlatAppearance.MouseOverBackColor = Color.Transparent;
             adaugaPersoanaButton.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            adaugaPersoanaButton.Font = new Font("Nirmala UI", 13, FontStyle.Bold);
-            adaugaPersoanaButton.Size = new Size(180, 30);
-            adaugaPersoanaButton.Location = new Point(50, 550);
-            adaugaPersoanaButton.MouseEnter += AdaugaPersoanaButton_MouseEnter;
-            adaugaPersoanaButton.MouseLeave += AdaugaPersoanaButton_MouseLeave;
-            adaugaPersoanaButton.MouseClick += AdaugaPersoanaButton_MouseClick;
+            adaugaPersoanaButton.Font = new Font("Nirmala UI", 15, FontStyle.Bold);
+            adaugaPersoanaButton.Location = new Point(0, 0);
+            adaugaPersoanaButton.Size = new Size(90, 35);
+            adaugaPersoanaButton.MouseEnter += AdaugaMouseEnter;
+            adaugaPersoanaButton.MouseLeave += AdaugaMouseLeave;
+            adaugaPersoanaButton.MouseClick += AdaugaMouseClick;
+
+
+            imageAdd = new Label() { Visible = false };
+            imageAdd.Size = new Size(26, 26);
+            imageAdd.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\addDefault.png");
+            imageAdd.Location = new Point(adaugaPersoanaButton.Width, 7);
+            imageAdd.MouseEnter += AdaugaMouseEnter;
+            imageAdd.MouseLeave += AdaugaMouseLeave;
+            imageAdd.MouseClick += AdaugaMouseClick;
+
+
+            optiuneAdauga.Controls.Add(imageAdd);
+            optiuneAdauga.Controls.Add(adaugaPersoanaButton);
+
+
+
+
+            getFullDatePersoanaCarte = new CheckBox() { Visible = true, Text = "Afisare persoane" };
+            getFullDatePersoanaCarte.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
+            getFullDatePersoanaCarte.Location = new Point(adaugaPersoanaCarte.Location.X, adaugaPersoanaCarte.Location.Y + adaugaPersoanaCarte.Height);
+            getFullDatePersoanaCarte.Size = new Size(180, 24);
+            getFullDatePersoanaCarte.CheckedChanged += GetFullDateCheckedChanged;
+
+
+
+            zonaDatePersoane = new DataGridView() { Visible = false, Size = new Size(460, 150) };
+            zonaDatePersoane.AllowUserToAddRows = true;
+            zonaDatePersoane.AllowUserToDeleteRows = true;
+            zonaDatePersoane.Columns.Add(new DataGridViewTextBoxColumn() { Visible = true, HeaderText = "Nume" });
+            zonaDatePersoane.Columns.Add(new DataGridViewTextBoxColumn() { Visible = true, HeaderText = "Prenume"});
+            zonaDatePersoane.Columns.Add(new DataGridViewTextBoxColumn() { Visible = true, HeaderText = "Statut" });
+            zonaDatePersoane.Columns.Add(new DataGridViewTextBoxColumn() { Visible = true, HeaderText = "Data nasterii" });
+            //zonaDatePersoane.ColumnHeadersDefaultCellStyle.BackColor = Color.Purple;
+            zonaDatePersoane.Location = new Point(300, 400);
+            zonaDatePersoane.BackgroundColor = Color.FromArgb(255, 246, 205);
+            zonaDatePersoane.BorderStyle = BorderStyle.None;
 
 
 
 
 
 
-
-
-
-            getFullDatePersoana = new CheckBox() { Visible = true, Text = "Afisare toate persoane" };
-            getFullDatePersoana.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
-            getFullDatePersoana.Location = new Point(adaugaPersoana.Location.X, adaugaPersoana.Location.Y + adaugaPersoana.Height);
-            getFullDatePersoana.Size = new Size(180, 24);
-
-
-
-
-
-
-
-
-
-
-
-            getDateDupaCriteriuPersoana = new CheckBox() { Visible = true, Text = "Cautare dupa nume" };
-            getDateDupaCriteriuPersoana.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
-            getDateDupaCriteriuPersoana.Location = new Point(getFullDatePersoana.Location.X, getFullDatePersoana.Location.Y + getFullDatePersoana.Height);
-            getDateDupaCriteriuPersoana.Size = new Size(180, 24);
+            getDateDupaCriteriuPersoanaCarte = new CheckBox() { Visible = true, Text = "Cautare dupa nume" };
+            getDateDupaCriteriuPersoanaCarte.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
+            getDateDupaCriteriuPersoanaCarte.Location = new Point(getFullDatePersoanaCarte.Location.X, getFullDatePersoanaCarte.Location.Y + getFullDatePersoanaCarte.Height);
+            getDateDupaCriteriuPersoanaCarte.Size = new Size(180, 24);
 
 
 
             menu.Controls.Add(logo);
             menu.Controls.Add(radioCarti);
             menu.Controls.Add(radioPersoane);
-            menu.Controls.Add(inapoi);
-            menu.Controls.Add(imageInapoi);
+            menu.Controls.Add(optiuneInapoi);
             menu.Controls.Add(administrareText);
             menu.Controls.Add(optiuniText);
-            menu.Controls.Add(adaugaPersoana);
+            menu.Controls.Add(adaugaPersoanaCarte);
             menu.Controls.Add(adaugaPersoanaOptiuneText);
-            menu.Controls.Add(getFullDatePersoana);
+            menu.Controls.Add(getFullDatePersoanaCarte);
             menu.Controls.Add(numePersoanaText);
             menu.Controls.Add(numePersoanaTextBox);
             menu.Controls.Add(prenumePersoanaText);
             menu.Controls.Add(prenumePersoanaTextBox);
-            menu.Controls.Add(getDateDupaCriteriuPersoana);
+            menu.Controls.Add(getDateDupaCriteriuPersoanaCarte);
             menu.Controls.Add(dataNasteriiPersoanaText);
             menu.Controls.Add(dataZiua);
             menu.Controls.Add(dataLuna);
             menu.Controls.Add(dataAnul);
-            menu.Controls.Add(adaugaPersoanaButton);
+            menu.Controls.Add(tipPersoanaText);
+            menu.Controls.Add(studentProfesorBibliotecar);
+            menu.Controls.Add(optiuneAdauga);
+            menu.Controls.Add(zonaDatePersoane);
 
         }
 
+        private void RadioChecked(object sender, EventArgs e) {
+            
+            if((sender as RadioButton).Checked) {
 
-        private void AdaugaPersoanaButton_MouseClick(object sender, EventArgs e) {
+                administrareVarianta = AdministrareVarianta.Persoane;
+                adaugaPersoanaCarte.Text = "Adauga persoana";
+                getFullDatePersoanaCarte.Text = "Afisare persoane";
+                getDateDupaCriteriuPersoanaCarte.Text = "Cautare dupa nume";
+                adaugaPersoanaCarte.Checked = false;
+                getDateDupaCriteriuPersoanaCarte.Checked = false;
+                getFullDatePersoanaCarte.Checked = false;
+               
+            }
+
+            else if (!(sender as RadioButton).Checked) {
+
+                administrareVarianta = AdministrareVarianta.Carti;
+                adaugaPersoanaCarte.Text = "Adauga carte";
+                getFullDatePersoanaCarte.Text = "Afisare carti";
+                getDateDupaCriteriuPersoanaCarte.Text = "Cautare dupa autor";
+                adaugaPersoanaCarte.Checked = false;
+                getDateDupaCriteriuPersoanaCarte.Checked = false;
+                getFullDatePersoanaCarte.Checked = false;
+
+            }
+        }
+
+        private void AdaugaMouseEnter(object sender, EventArgs e) {
+
+            Panel parent = null;
+
+            (sender as Control).Cursor = Cursors.Hand;
+            parent = (sender as Control).Parent as Panel;
+
+            foreach (var i in parent.Controls) {
+
+                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\addFocused.png");
+                else if (i is Button) (i as Button).ForeColor = FirstMenu.changedColor;
+            }
+        }
+
+
+        private void AdaugaMouseLeave(object sender, EventArgs e) {
+
+            Panel parent = null;
+
+            (sender as Control).Cursor = Cursors.Default;
+            parent = (sender as Control).Parent as Panel;
+
+            foreach (var i in parent.Controls) {
+
+                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\addDefault.png");
+                else if (i is Button) (i as Button).ForeColor = Color.Black;
+            }
+        }
+
+
+        private void AdaugaMouseClick(object sender, EventArgs e) {
 
             string nume = numePersoanaTextBox.Text;
             string prenume = prenumePersoanaTextBox.Text;
+            string statut = studentProfesorBibliotecar.Text;
             string dataNasterii = dataZiua.Text + "/" + dataLuna.Text + "/" + dataAnul.Text;
 
             numePersoanaTextBox.Clear();
             prenumePersoanaTextBox.Clear();
+            studentProfesorBibliotecar.Text = "Tip";
             dataZiua.Text = "ZZ";
             dataLuna.Text = "LL";
             dataAnul.Text = "AAAA";
 
 
-            AdministrarePersoane_FisierText.AdaugarePersoana(nume, prenume, dataNasterii);
+            AdministrarePersoane_FisierText.AdaugarePersoana(nume, prenume, statut, dataNasterii);
+            AdministrarePersoane_FisierText.GetFullDate(zonaDatePersoane);
 
-        }
-
-        private void AdaugaPersoanaButton_MouseEnter(object sender, EventArgs e) {
-
-            adaugaPersoanaButton.ForeColor = Color.FromArgb(219, 147, 3);
+            
         }
 
 
-        private void AdaugaPersoanaButton_MouseLeave(object sender, EventArgs e) {
+        private void InapoiMouseEnter(object sender, EventArgs e) {
 
-            adaugaPersoanaButton.ForeColor = Color.Black;
+            Panel parent = null;
+
+            (sender as Control).Cursor = Cursors.Hand;
+            parent = (sender as Control).Parent as Panel;
+
+            foreach (var i in parent.Controls) {
+
+                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiFocused.png");
+                else if (i is Button) (i as Button).ForeColor = FirstMenu.changedColor;
+            }
         }
+
+
+
+        private void InapoiMouseLeave(object sender, EventArgs e) {
+
+            Panel parent = null;
+
+            (sender as Control).Cursor = Cursors.Default;
+            parent = (sender as Control).Parent as Panel;
+
+            foreach (var i in parent.Controls) {
+
+                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiDefault.png");
+                else if (i is Button) (i as Button).ForeColor = Color.Black;
+            }
+        }
+
+
+        private void InapoiMouseClick(object sender, EventArgs e) {
+
+            menu.Visible = false;
+            FirstMenu.menu.Visible = true;
+        }
+
+
 
        
         private void AdaugaPersoana_CheckedChanged(object sender, EventArgs e) {
             
-            if(adaugaPersoana.Checked == true) {
+            if(adaugaPersoanaCarte.Checked == true && administrareVarianta == AdministrareVarianta.Persoane) {
 
                 numePersoanaText.Visible = true;
                 numePersoanaTextBox.Visible = true;
@@ -298,7 +447,11 @@ namespace newProiectPIU {
                 dataLuna.Visible = true;
                 dataAnul.Visible = true;
                 adaugaPersoanaOptiuneText.Visible = true;
-                adaugaPersoanaButton.Visible = true;
+                tipPersoanaText.Visible = true;
+                studentProfesorBibliotecar.Visible = true;
+                
+
+                foreach (var i in optiuneAdauga.Controls) (i as Control).Visible = true;
             }
 
             else {
@@ -312,49 +465,27 @@ namespace newProiectPIU {
                 dataLuna.Visible = false;
                 dataAnul.Visible = false;
                 adaugaPersoanaOptiuneText.Visible = false;
-                adaugaPersoanaButton.Visible = false;
+                tipPersoanaText.Visible = false;
+                studentProfesorBibliotecar.Visible = false;
+                foreach (var i in optiuneAdauga.Controls) (i as Control).Visible = false;
             }
         }
 
-        private void Inapoi_MouseClick(object sender, MouseEventArgs e) {
 
-            menu.Visible = false;
-            FirstMenu.menu.Visible = true;
+        private void GetFullDateCheckedChanged(object sender, EventArgs e) {
+
+            if (getFullDatePersoanaCarte.Checked && administrareVarianta == AdministrareVarianta.Persoane) {
+                zonaDatePersoane.Visible = true;
+            }
+
+            else {
+
+                zonaDatePersoane.Visible = false;
+            }
         }
 
-        private void ImageInapoi_Click(object sender, EventArgs e) {
 
-            menu.Visible = false;
-            FirstMenu.menu.Visible = true;
-        }
-
-        private void ImageInapoi_MouseLeave(object sender, EventArgs e) {
-
-            imageInapoi.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiDefault.png");
-            inapoi.ForeColor = Color.Black;
-            imageInapoi.Cursor = Cursors.Default;
-        }
-
-        private void ImageInapoi_MouseEnter(object sender, EventArgs e) {
-
-            imageInapoi.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiChanged.png");
-            inapoi.ForeColor = Color.FromArgb(219, 147, 3);
-            imageInapoi.Cursor = Cursors.Hand;
-        }
-
-        private void Inapoi_MouseLeave(object sender, EventArgs e) {
-
-            inapoi.ForeColor = Color.Black;
-            imageInapoi.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiDefault.png");
-            inapoi.Cursor = Cursors.Default;
-        }
-
-        private void Inapoi_MouseEnter(object sender, EventArgs e) {
-            
-            inapoi.ForeColor = Color.FromArgb(219, 147, 3);
-            imageInapoi.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiChanged.png");
-            inapoi.Cursor = Cursors.Hand;
-        }
+       
 
       
     }
