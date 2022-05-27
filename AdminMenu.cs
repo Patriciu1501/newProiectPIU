@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,13 @@ namespace newProiectPIU {
 
         public enum AdministrareVarianta { Carti, Persoane };
         AdministrareVarianta administrareVarianta;
+
+        public static Image menuAdministratorLogo;
+        public static Image addDefaultImage;
+        public static Image addFocusedImage;
+        public static Image inapoiDefaultImage;
+        public static Image inapoiFocusedImage;
+
 
         public static Panel menu;
         public Label logo;
@@ -42,15 +50,33 @@ namespace newProiectPIU {
         Button adaugaPersoanaButton;
 
 
+        Label listaPersoaneText;
         CheckBox getFullDatePersoanaCarte;
         DataGridView zonaDatePersoane;
 
 
         CheckBox getDateDupaCriteriuPersoanaCarte;
+        Button cautaPersoana;
+        TextBox numeCompletPersoana;
+        Button stergePersoana;
 
         
 
+        static AdminMenu() {
 
+            string projectPath = @"location";
+            string fullPath;
+
+            fullPath = Path.GetFullPath(projectPath);
+            fullPath = fullPath.Remove(fullPath.Length - projectPath.Length - 10);
+            fullPath += @"Images\";
+            menuAdministratorLogo = Image.FromFile(fullPath + "menuAdministratorLogo.png");
+            addDefaultImage = Image.FromFile(fullPath + "addDefault.png");
+            addFocusedImage = Image.FromFile(fullPath + "addFocused.png");
+            inapoiDefaultImage = Image.FromFile(fullPath + "inapoiDefault.png");
+            inapoiFocusedImage = Image.FromFile(fullPath + "inapoiFocused.png");
+            
+        }
 
 
         public AdminMenu() {
@@ -60,7 +86,7 @@ namespace newProiectPIU {
             menu.Size = new Size(950, 1050);
 
             logo = new Label() { Visible = true, Size = new Size(420, 290) };
-            logo.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\menuAdministratorLogo.png");
+            logo.Image = menuAdministratorLogo;
             logo.Location = new Point(230, 0);
 
             administrareText = new Label() { Text = "Administrare: ", Visible = true, Size = new Size(120, 30) };
@@ -98,7 +124,7 @@ namespace newProiectPIU {
 
             imageInapoi = new Label() { Visible = true };
             imageInapoi.Size = new Size(26, 26);
-            imageInapoi.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiDefault.png");
+            imageInapoi.Image = inapoiDefaultImage;
             imageInapoi.Location = new Point(0, 0);
             imageInapoi.MouseEnter += InapoiMouseEnter;
             imageInapoi.MouseLeave += InapoiMouseLeave;
@@ -245,7 +271,7 @@ namespace newProiectPIU {
 
             imageAdd = new Label() { Visible = false };
             imageAdd.Size = new Size(26, 26);
-            imageAdd.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\addDefault.png");
+            imageAdd.Image = addDefaultImage;
             imageAdd.Location = new Point(adaugaPersoanaButton.Width, 7);
             imageAdd.MouseEnter += AdaugaMouseEnter;
             imageAdd.MouseLeave += AdaugaMouseLeave;
@@ -265,6 +291,11 @@ namespace newProiectPIU {
             getFullDatePersoanaCarte.CheckedChanged += GetFullDateCheckedChanged;
 
 
+            listaPersoaneText = new Label() {  Size = new Size(170, 60), Visible = false };
+            listaPersoaneText.Font = new Font("Nirmala UI", 14, FontStyle.Bold);
+            listaPersoaneText.Location = new Point(370, 380);
+            listaPersoaneText.Text = "Lista persoane";
+
 
             zonaDatePersoane = new DataGridView() { Visible = false, Size = new Size(460, 150) };
             zonaDatePersoane.AllowUserToAddRows = true;
@@ -274,20 +305,58 @@ namespace newProiectPIU {
             zonaDatePersoane.Columns.Add(new DataGridViewTextBoxColumn() { Visible = true, HeaderText = "Statut" });
             zonaDatePersoane.Columns.Add(new DataGridViewTextBoxColumn() { Visible = true, HeaderText = "Data nasterii" });
             //zonaDatePersoane.ColumnHeadersDefaultCellStyle.BackColor = Color.Purple;
-            zonaDatePersoane.Location = new Point(300, 400);
+            zonaDatePersoane.Location = new Point(380, 410);
             zonaDatePersoane.BackgroundColor = Color.FromArgb(255, 246, 205);
             zonaDatePersoane.BorderStyle = BorderStyle.None;
+            AdministrarePersoane_FisierText.GetFullDate(zonaDatePersoane);
 
 
 
 
 
 
-            getDateDupaCriteriuPersoanaCarte = new CheckBox() { Visible = true, Text = "Cautare dupa nume" };
+            getDateDupaCriteriuPersoanaCarte = new CheckBox() { Visible = true, Text = "Cautare/stergere persoana" };
             getDateDupaCriteriuPersoanaCarte.Font = new Font("Nirmala UI", 10, FontStyle.Regular);
             getDateDupaCriteriuPersoanaCarte.Location = new Point(getFullDatePersoanaCarte.Location.X, getFullDatePersoanaCarte.Location.Y + getFullDatePersoanaCarte.Height);
             getDateDupaCriteriuPersoanaCarte.Size = new Size(180, 24);
+            getDateDupaCriteriuPersoanaCarte.CheckedChanged += GetDateDupaCriteriuPersoanaCarte_CheckedChanged;
 
+            
+            cautaPersoana = new Button();
+            cautaPersoana.Visible = false;
+            cautaPersoana.ForeColor = Color.Black;
+            cautaPersoana.BackColor = Color.FromArgb(255, 246, 205);
+            cautaPersoana.Text = "Cauta";
+            cautaPersoana.FlatStyle = FlatStyle.Flat;
+            cautaPersoana.FlatAppearance.BorderSize = 0;
+            cautaPersoana.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            cautaPersoana.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            cautaPersoana.Font = new Font("Nirmala UI", 14, FontStyle.Bold);
+            cautaPersoana.Location = new Point(425, 558);
+            cautaPersoana.Size = new Size(90, 35);
+            cautaPersoana.MouseEnter += CautaPersoana_MouseEnter;
+            cautaPersoana.MouseLeave += CautaPersoana_MouseLeave;
+            cautaPersoana.MouseClick += CautaPersoana_MouseClick;
+
+            numeCompletPersoana = new TextBox() { Visible = false, Size = new Size(200, 50) };
+            numeCompletPersoana.Font = new Font("Nirmala UI", 12, FontStyle.Regular);
+            numeCompletPersoana.Location = new Point(520, 560);
+
+            stergePersoana = new Button();
+            stergePersoana.Visible = false;
+            stergePersoana.ForeColor = Color.Black;
+            stergePersoana.BackColor = Color.FromArgb(255, 246, 205);
+            stergePersoana.Text = "Sterge";
+            stergePersoana.FlatStyle = FlatStyle.Flat;
+            stergePersoana.FlatAppearance.BorderSize = 0;
+            stergePersoana.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            stergePersoana.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            stergePersoana.Font = new Font("Nirmala UI", 14, FontStyle.Bold);
+            stergePersoana.Location = new Point(720, 557);
+            stergePersoana.Size = new Size(90, 35);
+            stergePersoana.MouseEnter += CautaPersoana_MouseEnter;
+            stergePersoana.MouseLeave += CautaPersoana_MouseLeave;
+            stergePersoana.MouseClick += StergePersoana_MouseClick;
 
 
             menu.Controls.Add(logo);
@@ -312,7 +381,69 @@ namespace newProiectPIU {
             menu.Controls.Add(studentProfesorBibliotecar);
             menu.Controls.Add(optiuneAdauga);
             menu.Controls.Add(zonaDatePersoane);
+            menu.Controls.Add(listaPersoaneText);
+            menu.Controls.Add(cautaPersoana);
+            menu.Controls.Add(numeCompletPersoana);
+            menu.Controls.Add(stergePersoana);
+        }
 
+        private void StergePersoana_MouseClick(object sender, MouseEventArgs e) {
+
+            foreach (DataGridViewRow item in zonaDatePersoane.SelectedRows) {
+
+                zonaDatePersoane.Rows.RemoveAt(item.Index);
+            }
+
+            AdministrarePersoane_FisierText.Refresh(zonaDatePersoane);
+        }
+
+        private void GetDateDupaCriteriuPersoanaCarte_CheckedChanged(object sender, EventArgs e) {
+
+            if (getDateDupaCriteriuPersoanaCarte.Checked && administrareVarianta == AdministrareVarianta.Persoane) {
+
+                numeCompletPersoana.Visible = true;
+                cautaPersoana.Visible = true;
+                stergePersoana.Visible = true;
+
+            }
+
+            else {
+
+                numeCompletPersoana.Visible = false;
+                cautaPersoana.Visible = false;
+                stergePersoana.Visible = false;
+
+            }
+
+        }
+
+        private void CautaPersoana_MouseClick(object sender, MouseEventArgs e) {
+
+            string[] numeComplet = numeCompletPersoana.Text.Split(' ');
+            bool found = false;
+
+            foreach (DataGridViewRow row in zonaDatePersoane.Rows) {
+
+                if (row.Cells[0].Value as string == numeComplet[0] && row.Cells[1].Value as string == numeComplet[1]) {
+                    row.Selected = true;
+                    found = true;
+                }
+
+            }
+
+            if (!found) numeCompletPersoana.Text = "Not found";
+        }
+
+        private void CautaPersoana_MouseLeave(object sender, EventArgs e) {
+
+            (sender as Button).ForeColor = Color.Black;
+            (sender as Button).Cursor = Cursors.Default;
+        }
+
+        private void CautaPersoana_MouseEnter(object sender, EventArgs e) {
+
+            (sender as Button).ForeColor = FirstMenu.changedColor;
+            (sender as Button).Cursor = Cursors.Hand;
         }
 
         private void RadioChecked(object sender, EventArgs e) {
@@ -351,7 +482,7 @@ namespace newProiectPIU {
 
             foreach (var i in parent.Controls) {
 
-                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\addFocused.png");
+                if (i is Label) (i as Label).Image = addFocusedImage;
                 else if (i is Button) (i as Button).ForeColor = FirstMenu.changedColor;
             }
         }
@@ -366,7 +497,7 @@ namespace newProiectPIU {
 
             foreach (var i in parent.Controls) {
 
-                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\addDefault.png");
+                if (i is Label) (i as Label).Image = addDefaultImage;
                 else if (i is Button) (i as Button).ForeColor = Color.Black;
             }
         }
@@ -403,7 +534,7 @@ namespace newProiectPIU {
 
             foreach (var i in parent.Controls) {
 
-                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiFocused.png");
+                if (i is Label) (i as Label).Image = inapoiFocusedImage;
                 else if (i is Button) (i as Button).ForeColor = FirstMenu.changedColor;
             }
         }
@@ -419,7 +550,7 @@ namespace newProiectPIU {
 
             foreach (var i in parent.Controls) {
 
-                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\inapoiDefault.png");
+                if (i is Label) (i as Label).Image = inapoiDefaultImage;
                 else if (i is Button) (i as Button).ForeColor = Color.Black;
             }
         }
@@ -476,11 +607,15 @@ namespace newProiectPIU {
 
             if (getFullDatePersoanaCarte.Checked && administrareVarianta == AdministrareVarianta.Persoane) {
                 zonaDatePersoane.Visible = true;
+                listaPersoaneText.Visible = true;
+             
             }
 
             else {
 
                 zonaDatePersoane.Visible = false;
+                listaPersoaneText.Visible = false;
+ 
             }
         }
 

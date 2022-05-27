@@ -13,6 +13,12 @@ namespace newProiectPIU {
 
         public static readonly Color changedColor = Color.FromArgb(219, 147, 3);
 
+        public static Image appLogo;
+        public static Image adminDefaultImage;
+        public static Image adminFocusedImage;
+        public static Image bookDefaultImage;
+        public static Image bookFocusedImage;
+
         public Panel adminMenuOption;
         public Button adminMenuButton;
         public Label adminPicture;
@@ -32,7 +38,20 @@ namespace newProiectPIU {
         public bool accesToAdmin;
 
 
+        static FirstMenu() {
 
+            string projectPath = @"location";
+            string fullPath;
+
+            fullPath = Path.GetFullPath(projectPath);
+            fullPath = fullPath.Remove(fullPath.Length - projectPath.Length - 10);
+            fullPath += @"Images\";
+            adminDefaultImage = Image.FromFile(fullPath + "adminDefault.png");
+            adminFocusedImage = Image.FromFile(fullPath + "adminFocused.png");
+            bookDefaultImage = Image.FromFile(fullPath + "bookDefault.png");
+            bookFocusedImage = Image.FromFile(fullPath + "bookFocused.png");
+            appLogo = Image.FromFile(fullPath + "logo.png");
+        }
         public FirstMenu() {
 
 
@@ -76,7 +95,7 @@ namespace newProiectPIU {
             adminData.Controls.Add(exitAdminData);
 
             logo = new Label() { Visible = true, Size = new Size(350, 290) };
-            logo.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\logo.png");
+            logo.Image = appLogo;
             logo.Location = new Point(250, 70);
             logo.Click += Logo_Click;
             logo.MouseEnter += Logo_MouseEnter;
@@ -89,7 +108,7 @@ namespace newProiectPIU {
 
              bookPicture = new Label() { Size = new Size(50, 50), BackColor = Color.Red, Visible = true };
              bookPicture.BackColor = Color.Transparent;
-             bookPicture.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\bookDefault.png");
+             bookPicture.Image = bookDefaultImage;
              bookPicture.MouseEnter += BibliotecaMenuMouseEnter;
              bookPicture.MouseLeave += BibliotecaMenuMouseLeave;
 
@@ -119,7 +138,7 @@ namespace newProiectPIU {
             
             adminPicture = new Label() { Size = new Size(50, 50), BackColor = Color.Red, Visible = true };
             adminPicture.BackColor = Color.Transparent;
-            adminPicture.Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\adminDefault.png");
+            adminPicture.Image = adminDefaultImage;
             adminPicture.MouseEnter += AdminMenuMouseEnter;
             adminPicture.MouseLeave += AdminMenuMouseLeave;
             adminPicture.MouseClick += AdminMenuMouseClick;
@@ -184,7 +203,7 @@ namespace newProiectPIU {
 
             foreach (var i in parent.Controls) {
 
-                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\bookFocused.png");
+                if (i is Label) (i as Label).Image = bookFocusedImage;
                 else if (i is Button) (i as Button).ForeColor = changedColor;
             }
 
@@ -200,7 +219,7 @@ namespace newProiectPIU {
 
             foreach (var i in parent.Controls) {
 
-                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\bookDefault.png");
+                if (i is Label) (i as Label).Image = bookDefaultImage;
                 else if (i is Button) (i as Button).ForeColor = Color.Black;
             }
 
@@ -216,7 +235,7 @@ namespace newProiectPIU {
 
             foreach (var i in parent.Controls) {
 
-                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\adminFocused.png");
+                if (i is Label) (i as Label).Image = adminFocusedImage;
                 else if (i is Button) (i as Button).ForeColor = changedColor;
             }
 
@@ -232,7 +251,7 @@ namespace newProiectPIU {
 
             foreach (var i in parent.Controls) {
 
-                if (i is Label) (i as Label).Image = Image.FromFile(@"C:\Users\bogat\source\repos\newProiectPIU\Images\adminDefault.png");
+                if (i is Label) (i as Label).Image = adminDefaultImage;
                 else if (i is Button) (i as Button).ForeColor = Color.Black;
             }
 
@@ -252,7 +271,15 @@ namespace newProiectPIU {
 
         private void EnterAdminData_Click(object sender, EventArgs e) {
 
-            StreamReader fisier = new StreamReader(@"C:\Users\bogat\source\repos\newProiectPIU\adminText.txt");
+
+            string projectPath = @"location";
+            string fullPath;
+
+            fullPath = Path.GetFullPath(projectPath);
+            fullPath = fullPath.Remove(fullPath.Length - projectPath.Length - 10);
+            fullPath += "adminText.txt";
+
+            StreamReader fisier = new StreamReader(fullPath);
             string data = fisier.ReadLine();
             string[] splits = data.Split(';');
 

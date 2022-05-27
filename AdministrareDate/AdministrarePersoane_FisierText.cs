@@ -42,6 +42,24 @@ namespace newProiectPIU.AdministrareDate {
         }
 
 
+        public static void Refresh(DataGridView grid) {
+
+            File.WriteAllText(numeFisier, String.Empty);
+
+            StreamWriter fisier = new StreamWriter(numeFisier, true);
+
+            foreach(DataGridViewRow i in grid.Rows) {
+
+                fisier.WriteLine(i.Cells[0].Value as string + ";" + i.Cells[1].Value as string + ";"
+                                 + i.Cells[2].Value as string + ";" + i.Cells[3].Value as string + ";");
+            }
+
+
+            fisier.Close();
+            
+        }
+
+
 
         public static string getDateDupaNume(string nume) {
             string linieDate = null;

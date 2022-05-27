@@ -99,7 +99,6 @@
     <Content Include="Images\addFocused.png" />
     <Content Include="Images\adminFocused.png" />
     <Content Include="Images\adminDefault.png" />
-    <Content Include="Images\auf.png" />
     <Content Include="Images\bookDefault.png" />
     <Content Include="Images\bookFocused.png" />
     <Content Include="Images\inapoiFocused.png" />
